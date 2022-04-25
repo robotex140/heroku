@@ -1,7 +1,6 @@
 from time import sleep
 import requests
 import urllib.parse as par
-import plotly
 import pandas as pd
 import io
 import urllib
@@ -22,7 +21,6 @@ def init_questdb_table():
                          ts TIMESTAMP)
         timestamp(ts)
     """
-
     r = requests.get("http://localhost:9000/exec?query=" + q)
     if r.status_code in [200,400]:
         print("success")
@@ -32,7 +30,6 @@ def init_questdb_table():
 
 def add_data_point(ID, value):
     q = "INSERT INTO sensor_data values('{}', {}, systimestamp())".format(ID, value)
-
     r = requests.get("http://localhost:9000/exec?query=" + q)
     if r.status_code in [200,400]:
         print("success")
@@ -144,34 +141,35 @@ def main(server_port: "Port to serve on." = 9950, server_address: "Local server 
 
 def get_cloudtestvar():
 
-    client1 = Client('opc.tcp://172.16.4.12:48858')
+    client1 = Client('opc.tcp://172.16.4.12:48050')
     client1.connect()
     root1 = client1.get_root_node()
-    cloud_var = client1.get_node('ns=4:s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Cloudtestvar.Value')
+    cloud_var = client1.get_node('ns=4;s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Cloudtestvar')
+    return cloud_var
 
 def get_level_1():
-    client1 = Client('opc.tcp://172.16.4.12:48858')
+    client1 = Client('opc.tcp://172.16.4.12:48050')
     client1.connect()
     root1 = client1.get_root_node()
-    var = client1.get_node('ns=4:s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Cloudtestvar.Value')
+    var = client1.get_node('ns=4;s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Level1.Value')
     var.get_value()
     return var.get_value()
 
 
 def get_level_2():
-    client1 = Client('opc.tcp://172.16.4.12:48858')
+    client1 = Client('opc.tcp://172.16.4.12:48050')
     client1.connect()
     root1 = client1.get_root_node()
-    var = client1.get_node('ns=4:s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Cloudtestvar.Value')
+    var = client1.get_node('ns=4;s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Level2.Value')
     var.get_value()
     return var.get_value()
 
 
 def get_level_3():
-    client1 = Client('opc.tcp://172.16.4.12:48858')
+    client1 = Client('opc.tcp://172.16.4.12:48050')
     client1.connect()
     root1 = client1.get_root_node()
-    var = client1.get_node('ns=4:s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Cloudtestvar.Value')
+    var = client1.get_node('ns=4;s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Level3.Value')
     var.get_value()
     return var.get_value()
 
@@ -182,12 +180,12 @@ if __name__ == "__main__":
     serverthread.start()
     while True:
 
-        #add_data_point('level1', get_level_1())
-        #add_data_point('level2', get_level_2())
-        #add_data_point('level3', get_level_3())
-        add_data_point('level1', random.randint(0, 63))
-        add_data_point('level2', random.randint(0, 63))
-        add_data_point('level3', random.randint(0, 63))
+        add_data_point('level1', get_level_1())
+        add_data_point('level2', get_level_2())
+        add_data_point('level3', get_level_3())
+        #add_data_point('level1', random.randint(0, 63))
+        #add_data_point('level2', random.randint(0, 63))
+        #add_data_point('level3', random.randint(0, 63))
 
         queryData = get_data_points()
         data = pd.read_csv(io.StringIO(queryData), parse_dates=['ts'])
