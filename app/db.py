@@ -152,8 +152,9 @@ def get_level_1():
     client1.connect()
     root1 = client1.get_root_node()
     var = client1.get_node('ns=4;s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Level1.Value')
-    var.get_value()
-    return var.get_value()
+    value = var.get_value()
+    client1.disconnect()
+    return value
 
 
 def get_level_2():
@@ -161,8 +162,9 @@ def get_level_2():
     client1.connect()
     root1 = client1.get_root_node()
     var = client1.get_node('ns=4;s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Level2.Value')
-    var.get_value()
-    return var.get_value()
+    value = var.get_value()
+    client1.disconnect()
+    return value
 
 
 def get_level_3():
@@ -170,8 +172,9 @@ def get_level_3():
     client1.connect()
     root1 = client1.get_root_node()
     var = client1.get_node('ns=4;s={9D1EEBE0-4E56-4181-84A5-6F643B6B3580}:Level3.Value')
-    var.get_value()
-    return var.get_value()
+    value = var.get_value()
+    client1.disconnect()
+    return value
 
 
 if __name__ == "__main__":
